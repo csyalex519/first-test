@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+  <title>나트랑 여행 스케줄</title>
+  
+  <style>
+    :root{
+      --accent:#7b1f3a;
+      --muted:#f6f3f4;
+      --success:#28a745;
+      --danger:#dc3545;
+      --warning:#ffc107;
+      --info:#17a2b8;
+      --light:#f8f9fa;
+      --dark:#343a40;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      margin: 0;
+      padding: 10px;
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--accent), #9c1e4a);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .header .subtitle {
+      margin: 5px 0 0 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .toolbar {
+      padding: 15px 20px;
+      background: var(--light);
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    
+    .flight-note {
+      background: linear-gradient(135deg, #fff3f3, #ffe8e8);
+      border-left: 4px solid var(--accent);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #666;
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    
+    .share-section {
+      background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+      padding: 15px;
+      border-radius: 15px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    
+    .share-link {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 25px;
+      padding: 10px 15px;
+      margin: 10px 0;
+      font-family: monospace;
+      font-size: 14px;
+      word-break: break-all;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .share-link:hover {
+      border-color: var(--accent);
+      background: #f8f9fa;
+    }
+    
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(123, 31, 58, 0.3);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(123, 31, 58, 0.4);
+    }
+    
+    button.secondary {
+      background: #6c757d;
+      box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+    
+    button.success {
+      background: var(--success);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    button.danger {
+      background: var(--danger);
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+    
+    .schedule-container {
+      padding: 20px;
+    }
+    
+    .schedule-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .schedule-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .schedule-header {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 15px 20px;
+      border-bottom: 1px solid #dee2e6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .date-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .date {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0;
+    }
+    
+    .day {
+      font-size: 14px;
+      color: #666;
+      margin: 2px 0 0 0;
+    }
+    
+    .time {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .schedule-content {
+      padding: 20px;
+    }
+    
+    .activity {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    
+    .location {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .location:before {
+      content: "📍";
+      margin-right: 5px;
+    }
+    
+    .transport {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .transport:before {
+      content: "🚗";
+      margin-right: 5px;
+    }
+    
+    .confirmation {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .confirmation:before {
+      content: "✅";
+      margin-right: 5px;
+    }
+    
+    .notes {
+      font-size: 14px;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 15px;
+    }
+    
+    .card-actions button {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 20px;
+    }
+    
+    .add-schedule {
+      background: linear-gradient(135deg, var(--success), #20c997);
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      width: 100%;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .add-schedule:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+    }
+    
+    .empty-state h3 {
+      margin: 0 0 10px 0;
+      color: #999;
+    }
+    
+    .fab {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(123, 31, 58, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(123, 31, 58, 0.6);
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+    }
+    
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-header h3 {
+      margin: 0;
+      color: var(--accent);
+    }
+    
+    .close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      background: var(--light);
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-number {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .qr-code {
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .qr-code img {
+      max-width: 200px;
+      border-radius: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+      }
+      
+      .header {
+        padding: 15px;
+      }
+      
+      .header h1 {
+        font-size: 20px;
+      }
+      
+      .toolbar {
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .flight-note {
+        margin-bottom: 10px;
+      }
+      
+      .controls {
+        justify-content: center;
+      }
+      
+      .schedule-container {
+        padding: 15px;
+      }
+      
+      .schedule-header {
+        padding: 12px 15px;
+      }
+      
+      .schedule-content {
+        padding: 15px;
+      }
+      
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏖️ 나트랑 여행 스케줄</h1>
+      <div class="subtitle">2025년 10월 10일 ~ 15일</div>
+    </div>
+
+    <div class="toolbar">
+      <div class="flight-note">
+        ✈️ 제주항공 (Jeju Air) — 항공편 정보는 각 일정의 확인란에 입력하세요
+      </div>
+      <div class="controls">
+        <button onclick="downloadCSV()">📊 CSV 다운로드</button>
+        <button class="secondary" onclick="window.print()">🖨️ 인쇄</button>
+        <button class="success" onclick="shareSchedule()">🔗 공유하기</button>
+      </div>
+    </div>
+
+    <div class="schedule-container">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number" id="totalDays">6</div>
+          <div class="stat-label">여행 일수</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="totalActivities">6</div>
+          <div class="stat-label">계획된 활동</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number" id="completedActivities">0</div>
+          <div class="stat-label">완료된 활동</div>
+        </div>
+      </div>
+
+      <div id="scheduleList">
+        <!-- 일정 카드들이 여기에 동적으로 생성됩니다 -->
+      </div>
+
+      <div class="share-section" id="shareSection" style="display: none;">
+        <h4>🔗 스케줄 공유하기</h4>
+        <p>이 링크를 다른 기기나 사람과 공유하면 같은 스케줄을 볼 수 있습니다!</p>
+        <div class="share-link" id="shareLink" onclick="copyShareLink()">
+          링크를 생성하는 중...
+        </div>
+        <button class="copy-btn" onclick="copyShareLink()">📋 복사</button>
+        <button class="secondary" onclick="closeShareSection()">닫기</button>
+        
+        <div class="qr-code">
+          <div id="qrcode"></div>
+        </div>
+      </div>
+
+      <button class="add-schedule" onclick="openAddModal()">
+        ➕ 새 일정 추가하기
+      </button>
+    </div>
+  </div>
+
+  <!-- 플로팅 액션 버튼 -->
+  <button class="fab" onclick="openAddModal()" title="일정 추가">
+    +
+  </button>
+
+  <!-- 일정 추가/편집 모달 -->
+  <div id="scheduleModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">새 일정 추가</h3>
+        <button class="close" onclick="closeModal()">&times;</button>
+      </div>
+      <form id="scheduleForm">
+        <div class="form-group">
+          <label for="scheduleDate">날짜</label>
+          <input type="date" id="scheduleDate" required>
+        </div>
+        <div class="form-group">
+          <label for="scheduleTime">시간</label>
+          <input type="time" id="scheduleTime">
+        </div>
+        <div class="form-group">
+          <label for="scheduleActivity">활동/일정</label>
+          <input type="text" id="scheduleActivity" placeholder="예: 시내관광, 해변 휴식" required>
+        </div>
+        <div class="form-group">
+          <label for="scheduleLocation">장소</label>
+          <input type="text" id="scheduleLocation" placeholder="예: 나트랑 비치, 포나가르 탑">
+        </div>
+        <div class="form-group">
+          <label for="scheduleTransport">이동수단</label>
+          <select id="scheduleTransport">
+            <option value="">선택하세요</option>
+            <option value="도보">🚶 도보</option>
+            <option value="택시">🚕 택시</option>
+            <option value="버스">🚌 버스</option>
+            <option value="보트">⛵ 보트</option>
+            <option value="투어버스">🚌 투어버스</option>
+            <option value="리조트 셔틀">🚌 리조트 셔틀</option>
+            <option value="공항버스">🚌 공항버스</option>
+            <option value="제주항공">✈️ 제주항공</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="scheduleConfirmation">확인/예약번호</label>
+          <input type="text" id="scheduleConfirmation" placeholder="항공편, 호텔 예약번호 등">
+        </div>
+        <div class="form-group">
+          <label for="scheduleNotes">비고</label>
+          <textarea id="scheduleNotes" placeholder="추가 메모나 특이사항"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="secondary" onclick="closeModal()">취소</button>
+          <button type="submit" class="success">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- QR 코드 라이브러리 -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+  <script>
+    // 일정 데이터 저장소
+    let schedules = [];
+    let editingIndex = -1;
+    let shareId = null;
+
+    // 초기 데이터 로드
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeApp();
+    });
+
+    // 앱 초기화
+    function initializeApp() {
+      // URL에서 공유 ID 확인
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get('id');
+      
+      if (id) {
+        shareId = id;
+        loadSharedSchedule(id);
+      } else {
+        loadSchedules();
+      }
+      
+      renderSchedules();
+      updateStats();
+    }
+
+    // 로컬 스토리지에서 일정 로드
+    function loadSchedules() {
+      const saved = localStorage.getItem('nhatrangSchedules');
+      if (saved) {
+        schedules = JSON.parse(saved);
+      } else {
+        // 기본 일정 데이터
+        schedules = [
+          {
+            id: 1,
+            date: '2025-10-10',
+            time: '14:00',
+            activity: '인천/김포 → 나트랑(도착) / 체크인',
+            location: '공항, 호텔',
+            transport: '제주항공 / 공항버스/택시',
+            confirmation: '',
+            notes: '출발 - 항공편 시간 입력'
+          },
+          {
+            id: 2,
+            date: '2025-10-11',
+            time: '09:00',
+            activity: '시내관광 / 해변 / 액티비티',
+            location: '나트랑 비치, 포나가르 탑 등',
+            transport: '도보/택시/투어버스',
+            confirmation: '',
+            notes: ''
+          },
+          {
+            id: 3,
+            date: '2025-10-12',
+            time: '08:00',
+            activity: '스노클링/다이빙/호핑투어',
+            location: '인근 섬/리조트',
+            transport: '보트',
+            confirmation: '',
+            notes: ''
+          },
+          {
+            id: 4,
+            date: '2025-10-13',
+            time: '10:00',
+            activity: '문화/시장 방문, 카페',
+            location: '담시장 등',
+            transport: '택시/도보',
+            confirmation: '',
+            notes: ''
+          },
+          {
+            id: 5,
+            date: '2025-10-14',
+            time: '11:00',
+            activity: '리조트 휴식 / 스파',
+            location: '리조트',
+            transport: '리조트 셔틀/도보',
+            confirmation: '',
+            notes: ''
+          },
+          {
+            id: 6,
+            date: '2025-10-15',
+            time: '16:00',
+            activity: '체크아웃 → 공항 이동 → 귀국',
+            location: '호텔, 공항',
+            transport: '택시/공항버스 / 제주항공',
+            confirmation: '',
+            notes: '출발 - 항공편 시간 입력'
+          }
+        ];
+        saveSchedules();
+      }
+    }
+
+    // 공유된 스케줄 로드
+    function loadSharedSchedule(id) {
+      const sharedData = localStorage.getItem(`shared_schedule_${id}`);
+      if (sharedData) {
+        schedules = JSON.parse(sharedData);
+      } else {
+        // 공유된 데이터가 없으면 기본 데이터 로드
+        loadSchedules();
+      }
+    }
+
+    // 로컬 스토리지에 일정 저장
+    function saveSchedules() {
+      localStorage.setItem('nhatrangSchedules', JSON.stringify(schedules));
+      
+      // 공유 ID가 있으면 공유 데이터도 업데이트
+      if (shareId) {
+        localStorage.setItem(`shared_schedule_${shareId}`, JSON.stringify(schedules));
+      }
+    }
+
+    // 일정 목록 렌더링
+    function renderSchedules() {
+      const scheduleList = document.getElementById('scheduleList');
+      
+      if (schedules.length === 0) {
+        scheduleList.innerHTML = `
+          <div class="empty-state">
+            <h3>아직 일정이 없습니다</h3>
+            <p>➕ 버튼을 눌러 첫 번째 일정을 추가해보세요!</p>
+          </div>
+        `;
+        return;
+      }
+
+      // 날짜순으로 정렬
+      const sortedSchedules = [...schedules].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      scheduleList.innerHTML = sortedSchedules.map((schedule, index) => {
+        const date = new Date(schedule.date);
+        const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const dayName = dayNames[date.getDay()];
+        
+        return `
+          <div class="schedule-card" data-id="${schedule.id}">
+            <div class="schedule-header">
+              <div class="date-info">
+                <div class="date">${schedule.date}</div>
+                <div class="day">${dayName}</div>
+              </div>
+              <div class="time">${schedule.time || '시간 미정'}</div>
+            </div>
+            <div class="schedule-content">
+              <div class="activity">${schedule.activity}</div>
+              ${schedule.location ? `<div class="location">${schedule.location}</div>` : ''}
+              ${schedule.transport ? `<div class="transport">${schedule.transport}</div>` : ''}
+              ${schedule.confirmation ? `<div class="confirmation">${schedule.confirmation}</div>` : ''}
+              ${schedule.notes ? `<div class="notes">${schedule.notes}</div>` : ''}
+              <div class="card-actions">
+                <button class="success" onclick="editSchedule(${schedule.id})">✏️ 편집</button>
+                <button class="danger" onclick="deleteSchedule(${schedule.id})">🗑️ 삭제</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 통계 업데이트
+    function updateStats() {
+      document.getElementById('totalActivities').textContent = schedules.length;
+      document.getElementById('completedActivities').textContent = schedules.filter(s => s.confirmation).length;
+    }
+
+    // 모달 열기
+    function openAddModal() {
+      editingIndex = -1;
+      document.getElementById('modalTitle').textContent = '새 일정 추가';
+      document.getElementById('scheduleForm').reset();
+      document.getElementById('scheduleModal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 일정 편집 모달 열기
+    function editSchedule(id) {
+      const schedule = schedules.find(s => s.id === id);
+      if (!schedule) return;
+
+      editingIndex = schedules.indexOf(schedule);
+      document.getElementById('modalTitle').textContent = '일정 편집';
+      
+      // 폼에 데이터 채우기
+      document.getElementById('scheduleDate').value = schedule.date;
+      document.getElementById('scheduleTime').value = schedule.time || '';
+      document.getElementById('scheduleActivity').value = schedule.activity;
+      document.getElementById('scheduleLocation').value = schedule.location || '';
+      document.getElementById('scheduleTransport').value = schedule.transport || '';
+      document.getElementById('scheduleConfirmation').value = schedule.confirmation || '';
+      document.getElementById('scheduleNotes').value = schedule.notes || '';
+      
+      document.getElementById('scheduleModal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 모달 닫기
+    function closeModal() {
+      document.getElementById('scheduleModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // 일정 삭제
+    function deleteSchedule(id) {
+      if (confirm('이 일정을 삭제하시겠습니까?')) {
+        schedules = schedules.filter(s => s.id !== id);
+        saveSchedules();
+        renderSchedules();
+        updateStats();
+      }
+    }
+
+    // 폼 제출 처리
+    document.getElementById('scheduleForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        id: editingIndex === -1 ? Date.now() : schedules[editingIndex].id,
+        date: document.getElementById('scheduleDate').value,
+        time: document.getElementById('scheduleTime').value,
+        activity: document.getElementById('scheduleActivity').value,
+        location: document.getElementById('scheduleLocation').value,
+        transport: document.getElementById('scheduleTransport').value,
+        confirmation: document.getElementById('scheduleConfirmation').value,
+        notes: document.getElementById('scheduleNotes').value
+      };
+
+      if (editingIndex === -1) {
+        schedules.push(formData);
+      } else {
+        schedules[editingIndex] = formData;
+      }
+
+      saveSchedules();
+      renderSchedules();
+      updateStats();
+      closeModal();
+    });
+
+    // CSV 다운로드
+    function downloadCSV() {
+      const headers = ['날짜', '요일', '시간', '활동', '장소', '이동수단', '확인', '비고'];
+      const rows = [headers.join(',')];
+
+      const sortedSchedules = [...schedules].sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      sortedSchedules.forEach(schedule => {
+        const date = new Date(schedule.date);
+        const dayNames = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+        const dayName = dayNames[date.getDay()];
+        
+        const row = [
+          schedule.date,
+          dayName,
+          schedule.time || '',
+          `"${schedule.activity}"`,
+          `"${schedule.location || ''}"`,
+          `"${schedule.transport || ''}"`,
+          `"${schedule.confirmation || ''}"`,
+          `"${schedule.notes || ''}"`
+        ];
+        rows.push(row.join(','));
+      });
+
+      const csv = rows.join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `나트랑_여행_스케줄_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // 공유 기능
+    function shareSchedule() {
+      if (!shareId) {
+        // 새 공유 ID 생성
+        shareId = 'share_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        // 공유 데이터 저장
+        localStorage.setItem(`shared_schedule_${shareId}`, JSON.stringify(schedules));
+        
+        // URL 업데이트
+        const newUrl = `${window.location.origin}${window.location.pathname}?id=${shareId}`;
+        window.history.replaceState({}, '', newUrl);
+      }
+      
+      const shareUrl = `${window.location.origin}${window.location.pathname}?id=${shareId}`;
+      document.getElementById('shareLink').textContent = shareUrl;
+      document.getElementById('shareSection').style.display = 'block';
+      
+      // QR 코드 생성
+      generateQRCode(shareUrl);
+    }
+
+    // QR 코드 생성
+    function generateQRCode(url) {
+      const qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = '';
+      
+      QRCode.toCanvas(qrContainer, url, {
+        width: 200,
+        height: 200,
+        color: {
+          dark: '#7b1f3a',
+          light: '#ffffff'
+        }
+      }, function (error) {
+        if (error) {
+          console.error('QR 코드 생성 실패:', error);
+          qrContainer.innerHTML = '<p>QR 코드 생성 실패</p>';
+        }
+      });
+    }
+
+    // 공유 링크 복사
+    async function copyShareLink() {
+      const shareUrl = document.getElementById('shareLink').textContent;
+      
+      try {
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl);
+          showNotification('링크가 복사되었습니다! 📋');
+        } else {
+          // 구형 브라우저 지원
+          const textArea = document.createElement('textarea');
+          textArea.value = shareUrl;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          showNotification('링크가 복사되었습니다! 📋');
+        }
+      } catch (error) {
+        console.error('복사 실패:', error);
+        showNotification('복사에 실패했습니다. 링크를 직접 복사해주세요.', 'error');
+      }
+    }
+
+    // 공유 섹션 닫기
+    function closeShareSection() {
+      document.getElementById('shareSection').style.display = 'none';
+    }
+
+    // 알림 표시
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#dc3545' : '#28a745'};
+        color: white;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 10000;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        animation: slideIn 0.3s ease;
+      `;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+
+    // CSS 애니메이션 추가
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // 모달 외부 클릭시 닫기
+    document.getElementById('scheduleModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // 터치 제스처 지원 (모바일)
+    let startX = 0;
+    let startY = 0;
+
+    document.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', function(e) {
+      if (!startX || !startY) return;
+
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = startY - endY;
+
+      // 좌우 스와이프 감지
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+          // 왼쪽으로 스와이프 - 다음 일정으로
+          console.log('왼쪽 스와이프');
+        } else {
+          // 오른쪽으로 스와이프 - 이전 일정으로
+          console.log('오른쪽 스와이프');
+        }
+      }
+
+      startX = 0;
+      startY = 0;
+    });
+  </script>
+</body>
+</html>
